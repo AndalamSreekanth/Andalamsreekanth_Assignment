@@ -23,19 +23,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-
-import com.ecommerce.Color;
 import com.ecommerce.EProduct;
-import com.ecommerce.Finance;
 import com.ecommerce.HibernateUtil;
-import com.ecommerce.OS;
-import com.ecommerce.ScreenSizes;
+import com.ecommerce.ProductParts;
+
 
 /**
 * Servlet implementation class ProductDetails
 */
 @WebServlet("/ProductDetails")
-public class ProductDetails extends HttpServlet {
+public class ProductDetails3 extends HttpServlet {
         private static final long serialVersionUID = 1L;
        
         
@@ -43,7 +40,7 @@ public class ProductDetails extends HttpServlet {
     /**
 * @see HttpServlet#HttpServlet()
 */
-    public ProductDetails() {
+    public ProductDetails3() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -58,48 +55,22 @@ public class ProductDetails extends HttpServlet {
                         
                         Session session = factory.openSession();
                         
+                        
                          
                         List<EProduct> list = session.createQuery("from EProduct").list();
                         
                          PrintWriter out = response.getWriter();
                          out.println("<html><body>");
-                         out.println("<b>Product Listing</b><br>");
+                         
+                         out.println("<b>Component Mapping</b><br>");
                          for(EProduct p: list) {
                                  out.println("ID: " + String.valueOf(p.getID()) + ", Name: " + p.getName() +
                                                  ", Price: " + String.valueOf(p.getPrice()) + ", Date Added: " + p.getDateAdded().toString());
-                                 
-                                 List<Color> colors = p.getColors();
-                                 out.println("Colors: ");
-                                 for(Color c: colors) {
-                                         out.print(c.getName() + "&nbsp;");
-                                 }
-                                 
-                                 Collection<ScreenSizes> sizes= p.getScreensizes();
-                                 out.println(", Screen Sizes: ");
-                                 for(ScreenSizes s: sizes) {
-                                         out.print(s.getSize() + "&nbsp;");
-                                 }
-                                 
-                                 Set<OS> os= p.getOs();
-                                 out.println(", OS : ");
-                                 for(OS o: os) {
-                                         out.print(o.getName() + "&nbsp;");
-                                 }
-                                 
-                                 Map finances = p.getFinance();
-                                 out.println(", Finance Options: ");
-                                 if (finances.get("CREDITCARD") != null) {
-                                        Finance f = (Finance) finances.get("CREDITCARD");
-                                        out.println(f.getName() + " &nbsp;");
-                                 }
-                                 if (finances.get("BANK") != null) {
-                                        Finance f = (Finance) finances.get("BANK");
-                                        out.println(f.getName() + " &nbsp;");
-                                 }
-                                 
-                                 
+                                 ProductParts parts = p.getParts();
+                                 out.println("Parts =" + parts.getCpu() + ", " + parts.getHdd() + ", " + parts.getRam());
                                  out.println("<hr>");
                          }
+                         
                                 session.close();
 
                      out.println("</body></html>");
